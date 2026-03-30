@@ -1,21 +1,35 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from google import genai # <--- Notice the new import here!
+from google import genai 
 import os
 from dotenv import load_dotenv
 import json
 
-load_dotenv()
+# This loads the .env file when you are on your Mac, but safely ignores it on Render
+load_dotenv() 
 
 app = Flask(__name__)
 CORS(app)
 
-# The new Google GenAI client automatically looks for the GEMINI_API_KEY in your .env file
-client = genai.Client()
+# ---------------------------------------------------------
+# BULLETPROOF API KEY CHECK
+# ---------------------------------------------------------
+my_api_key = os.environ.get("GEMINI_API_KEY")
+
+if not my_api_key:
+    print("🚨 RENDER ALARM: I cannot find the GEMINI_API_KEY in the Render Environment Variables!")
+else:
+    print(f"✅ RENDER SUCCESS: I found the API key! It starts with: {my_api_key[:5]}")
+
+# Explicitly hand the key to the Google tool so it stops complaining
+client = genai.Client(api_key=my_api_key)
+# ---------------------------------------------------------
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+# ... (Keep the rest of your authenticate_ticket code exactly the same below this)
 
 @app.route('/api/authenticate', methods=['POST'])
 def authenticate_ticket():
