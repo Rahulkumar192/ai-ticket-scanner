@@ -1,3 +1,4 @@
+**[Try the live APP Here!](https://ai-ticket-scanner.onrender.com)**
 # AI Ticket Scanner 🎟️
 A modern, web-based QR code scanner that uses Google's Gemini AI to authenticate event tickets and verify journey dates.
 
